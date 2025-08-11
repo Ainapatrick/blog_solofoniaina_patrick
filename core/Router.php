@@ -1,7 +1,7 @@
 <?php
 class Router {
     public function run() {
-        $controllerName = $_GET['controller'] ?? 'user';
+        $controllerName = $_GET['controller'] ?? 'blog';
         $actionName = $_GET['action'] ?? 'index';
 
         $controllerClass = ucfirst($controllerName) . 'Controller';

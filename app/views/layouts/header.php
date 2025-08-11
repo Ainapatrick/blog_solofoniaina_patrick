@@ -24,6 +24,7 @@ $user = $_SESSION['user'] ?? null;
 
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <?php //var_dump($user); die; ?>
           <?php if ($user): ?>
             <li class="nav-item"><a class="nav-link" href="index.php?controller=article&action=index">Articles</a></li>
             <li class="nav-item"><a class="nav-link" href="index.php?controller=categorie&action=index">Catégories</a></li>
