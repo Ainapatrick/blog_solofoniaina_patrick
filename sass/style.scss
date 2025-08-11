@@ -1,7 +1,46 @@
+// ========== Import Bootstrap ========== //
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/bootstrap";
 
-//@import "./../node_modules/bulma";
-
-/* Tes styles personnalisés ici */
+// ========== Styles ========== //
 body {
-  background-color: #703737;
+  background-color: #f8f9fa;
 }
+
+.navbar {
+  background-color: $primary;
+}
+
+.hero-image {
+  position: relative;
+  /*background-image: url('https://media.gettyimages.com/id/606240020/fr/photo/cocos-nucifera-a-coconut-palm-tree-with-coconuts-in-tortuguero-national-park-costa-rica.jpg?s=612x612&w=0&k=20&c=Kqz2n6jbr23uYLMHsO02Gu7WUXZrEgMNk8fEBbp7GhM=');
+  */
+  background-image: url('../images/coco2.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(41, 35, 35, 0.5);
+    z-index: 1;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+
