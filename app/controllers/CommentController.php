@@ -34,7 +34,7 @@ class CommentController
             'contenu' => $comment
         ]);
 
-        $comments = $this->commentModel->getDernierArticle($userId, $articleId);
+        $comments = $this->commentModel->getDernierCommArticle($userId, $articleId);
         $countComment = $this->commentModel->countComment($articleId);
 
         echo json_encode([
