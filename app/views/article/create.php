@@ -1,7 +1,7 @@
 <?php include '../app/views/layouts/header.php'; ?>
 
 <div class="container mt-5">
-  <div class="row justify-content-center bg-grey">
+  <div class="row justify-content-center p-3 shadow-lg">
     <div class="col-md-8">
       <h2 class="mb-4 text-center text-primary">📝 Créer un nouvel article</h2>
 
@@ -14,7 +14,7 @@
 
         <div class="mb-3">
           <label for="contenu" class="form-label">Contenu</label>
-          <textarea class="form-control" id="contenu" name="contenu" rows="6" required></textarea>
+          <textarea class="form-control contenu" id="contenu" name="contenu" rows="6" required></textarea>
         </div>
 
         <div class="mb-3">

@@ -13,20 +13,22 @@ class ArticleController
         session_start();
     }
 
+    // affichage aritcle et leurs reactions
     public function index()
-    {   
+    {
         session_start();
         $user = $_SESSION['user'] ?? null;
         $articles = $this->articleModel->getAll();
         $likesModel = $this->likeModel;
         $emojiCountsByArticle = [];
+        //total likes + emojis
+        $emojiLikeTotals = $this->likeModel->countEmojiAndLikeByArticle();
 
-    // Mila article ID no alefa, fa tsy object
-    foreach ($articles as $article) {
-        $emojiCounts = $this->emojiCounts->countAllEmojisByArticle($article['id']);
-        $emojiCountsByArticle[$article['id']] = $emojiCounts;
-    }
-        //var_dump($articles);
+        // transformer associative array: [article_id => total]
+        $emojiCountsByArticle = [];
+        foreach ($emojiLikeTotals as $row) {
+            $emojiCountsByArticle[$row['article_id']] = (int)$row['total'];
+        }
         include __DIR__ . '/../views/article/index.php';
     }
 
@@ -38,12 +40,11 @@ class ArticleController
     public function store()
     {
         session_start();
-        // Vérifier si l'utilisateur est connecté
         if (!isset($_SESSION['user'])) {
             header('Location: ?controller=auth&action=login');
             exit;
         }
-        // Récupération des données
+        // Récupération
         $titre = trim($_POST['titre']);
         $contenu = trim($_POST['contenu']);
         $user_id = $_SESSION['user']['id'];
@@ -116,8 +117,7 @@ class ArticleController
             if (move_uploaded_file($image['tmp_name'], $uploadPath)) {
                 $imagePath = '/uploads/articles/' . $imageName;
                 $imagePathActuel = __DIR__ . '/../../public/' . $article['image'];
-               // var_dump($imagePathActuel);die;
-               //suppression de fichier actuel
+                //suppression de fichier actuel
                 if (file_exists($imagePathActuel)) {
                     unlink($imagePathActuel);
                 }
@@ -139,7 +139,7 @@ class ArticleController
     {
         $id = $_GET['id'];
         $article = $this->articleModel->delete($id);
-        
+
         header("Location: index.php?controller=article&action=index");
         exit;
     }

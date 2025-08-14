@@ -11,11 +11,20 @@ class Article
 
     public function getAll()
     {
-        $stmt = $this->pdo->query("SELECT a.*, 
-            (SELECT COUNT(*) FROM likes l WHERE l.article_id = a.id) AS likes_count
-            FROM articles a
-            ORDER BY a.created_at DESC");
-        
+        $sql = "
+            SELECT 
+                a.*,
+                    (SELECT COUNT(*) 
+                    FROM likes l 
+                    WHERE l.article_id = a.id) AS likes_count,
+                    
+                    (SELECT COUNT(*) 
+                    FROM commentaires c 
+                    WHERE c.article_id = a.id) AS comments_count
+                FROM articles a
+                ORDER BY a.created_at DESC
+            ";
+        $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -29,8 +38,6 @@ class Article
             $data['user_id']
         ]);
     }
-
-
 
     public function findByEmail($email)
     {
@@ -68,16 +75,14 @@ class Article
     {
         $stmt = $this->pdo->prepare("SELECT image FROM articles WHERE id = ?");
         $stmt->execute([$id]);
-        $article = $stmt->fetch();
+        $imgarticle = $stmt->fetch();
 
-        if ($article && !empty($article['image'])) {
-            $imagePath = __DIR__ . '/../../public/' . $article['image'];
+        if ($imgarticle && !empty($imgarticle['image'])) {
+            $imagePath = __DIR__ . '/../../public/' . $imgarticle['image'];
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
         }
-
-
         $stmt = $this->pdo->prepare("DELETE FROM articles WHERE id = ?");
         $stmt->execute([$id]);
     }

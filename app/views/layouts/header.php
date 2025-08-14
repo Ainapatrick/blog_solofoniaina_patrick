@@ -7,16 +7,16 @@ $user = $_SESSION['user'] ?? null;
 
 <head>
   <meta charset="UTF-8">
-  <title>Mon Blog</title>
+  <title>Blog</title>
   <link rel="stylesheet" href="/css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!--link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"-->
 </head>
 
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">MonBlog</a>
+      <a class="navbar-brand fw-bold" href="#">Blog </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
@@ -24,7 +24,8 @@ $user = $_SESSION['user'] ?? null;
 
       <div class="collapse navbar-collapse" id="navbarContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <?php //var_dump($user); die; ?>
+          <?php //var_dump($user); die; 
+          ?>
           <?php if ($user): ?>
             <li class="nav-item"><a class="nav-link" href="index.php?controller=article&action=index">Articles</a></li>
             <li class="nav-item"><a class="nav-link" href="index.php?controller=categorie&action=index">Catégories</a></li>
@@ -42,9 +43,13 @@ $user = $_SESSION['user'] ?? null;
             <div class="dropdown">
               <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="../images/coco2.jpg" alt="profile" width="32" height="32" class="rounded-circle me-2">
-                <strong class="text-red"><?= htmlspecialchars($user['nom']) ?></strong>
+                <strong class="text-red"><?= htmlspecialchars($user['name']) ?></strong>
               </a>
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="index.php?controller=article&action=create">Créer un article </a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item" href="#">Paramètres</a></li>
                 <li>
                   <hr class="dropdown-divider">
