@@ -20,6 +20,7 @@ class ArticleController
         $user = $_SESSION['user'] ?? null;
         $articles = $this->articleModel->getAll();
         $likesModel = $this->likeModel;
+        $emojiModel = $this->emojiCounts;
         $emojiCountsByArticle = [];
         //total likes + emojis
         $emojiLikeTotals = $this->likeModel->countEmojiAndLikeByArticle();

@@ -41,14 +41,14 @@
                                             <?php if ($dernierLike = $this->likeModel->getDernierLike($u['id'])): ?>
                                                 <?= htmlspecialchars($dernierLike['code']) ?>
                                             <?php else: ?>
-                                               
+
                                             <?php endif; ?>
                                         </span>
                                         <span id="like-code-<?= $u['id'] ?>">
                                             <?php if ($dernierLike = $this->likeModel->getDernierLike($u['id'])): ?>
                                                 👍
                                             <?php else: ?>
-                                               
+
                                             <?php endif; ?>
                                         </span>
                                         <span id="user-code-<?= $u['id'] ?>">
@@ -67,17 +67,20 @@
                                 </div>
 
                                 <!-- Liste commentaire -->
-                                <div id="comments-list-<?= $u['id'] ?>" class=""></div>
+                                <?php if (!empty($u['comments_count']) && $u['comments_count'] > 0): ?>
+                                    <div id="comments-list-<?= $u['id'] ?>"></div>
+                                <?php endif; ?>
+
 
                                 <div class="mt-1 d-flex justify-content-between">
                                     <button type="button" class="btn btn-outline-primary btn-sm voir-comment"
-                                        data-article-id="<?= $u['id'] ?>"><span id="comment-count-<?= $u['id'] ?>">💬 <?= $u['comments_count'] ?? 0 ?></span> commentaires</button>
+                                        data-article-id="<?= $u['id'] ?>"><span id="comment-count-<?= $u['id'] ?>">💬 <?= $u['comments_count'] ?? 0 ?> Voir</span></button>
                                     <?php
                                     $userLiked = isset($_SESSION['user']) && $likesModel->userLikes($user['id'], $u['id']);
                                     ?>
                                     <?php if (!$userLiked) : ?>
                                         <button type="button"
-                                            class="btn btn-outline-success btn-sm like-btn"
+                                            class="btn btn-outline-secondary btn-sm like-btn text-secondary"
                                             data-article-id="<?= $u['id'] ?>"
                                             data-action="store">
                                             👍<span id="likes-count-<?= $u['id'] ?>"><?= $u['likes_count'] ?? 0 ?></span>
@@ -85,7 +88,7 @@
                                         </button>
                                     <?php else: ?>
                                         <button type="button"
-                                            class="btn btn-outline-danger btn-sm like-btn"
+                                            class="btn btn-outline-success btn-sm like-btn"
                                             data-article-id="<?= $u['id'] ?>"
                                             data-action="delete">
                                             👍 <span id="likes-count-<?= $u['id'] ?>"> <?= $u['likes_count'] ?? 0 ?></span>
@@ -93,7 +96,18 @@
                                         </button>
                                     <?php endif; ?>
                                     <div class="position-relative">
-                                        <button type="button" class="btn btn-outline-danger btn-sm" id="emojiBtn-<?= $u['id'] ?>">❤️</button>
+                                        <?php
+                                        $userEmoji = $emojiModel->UnEmojiParUser($u['id'], $user['id']);
+                                        ?>
+                                        <button type="button"
+                                            class="btn btn-outline-danger btn-sm"
+                                            id="emojiBtn-<?= $u['id'] ?>"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Cliquez pour choisir un emoji">
+                                            <?= $userEmoji['code'] ?? "😀" ?>
+                                        </button>
+
                                         <div class="emoji-picker border bg-white shadow rounded p-2 position-absolute"
                                             id="emojiPicker-<?= $u['id'] ?>"
                                             style="display:none; bottom: 100%; right: 0; width: 200px; z-index: 1000;">
@@ -108,35 +122,45 @@
                                             <button class="emoji-btn btn btn-light btn-sm m-1" data-emoji="🎑">🎑</button>
                                         </div>
                                     </div>
+
+                                    <div class="position-relative">
+                                        <?php if ($user && $user['id'] == $u['user_id']): ?>
+                                            <button type="button" class="btn btn-outline-success btn-sm" id="param-<?= $u['id'] ?>">⚙️ paramètre</button>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-outline-success btn-sm" id="param-<?= $u['id'] ?>">💬 Commenter</button>
+                                        <?php endif; ?>
+
+                                        <div class="card shadow position-absolute border-4"
+                                            id="btnSM-<?= $u['id'] ?>"
+                                            style="display:none; bottom: 110%; right: 0; width: 330px; z-index: 1000;">
+
+                                            <!-- Header with Close Icon -->
+                                            <div class="card-header bg-light d-flex justify-content-between align-items-center py-2">
+                                                <strong>Actions</strong>
+                                                <button type="button" class="btn-close" aria-label="Close" data-close-popup="<?= $u['id'] ?>"></button>
+                                            </div>
+                                            <div class="card-body bg-white">
+                                                <?php if ($user && $user['id'] == $u['user_id']): ?>
+                                                    <div class="mb-3 d-flex justify-content-center">
+                                                        <a href="index.php?controller=article&action=edit&id=<?= $u['id'] ?>" class="btn btn-outline-warning btn-sm text-dark me-3">✏️ Modifier</a>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-<?= $u['id'] ?>">🗑️ Supprimer</button>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <!-- Comment Form -->
+                                                <form class="comment-form" data-article-id="<?= $u['id'] ?>">
+                                                    <input type="hidden" name="article_id" value="<?= $u['id'] ?>">
+                                                    <div class="form-group">
+                                                        <textarea name="comment" style="border:2px solid #ccc;" rows="3" class="form-control mb-2" placeholder="Votre commentaire..." required></textarea>
+                                                        <button type="submit" class="btn btn-primary btn-sm w-100">💬 Commenter</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
-
-                                <!-- Form commentaire INSIDE card -->
-                                <form class="comment-form mt-3" data-article-id="<?= $u['id'] ?>">
-                                    <input type="hidden" name="article_id" value="<?= $u['id'] ?>">
-                                    <div class="form-group d-flex justify-content-between">
-                                        <div class="">
-                                            <textarea name="comment" rows="2" class="form-control" placeholder="Votre commentaire..." required></textarea>
-                                        </div>
-                                        <div class="ml-2 mt-4">
-                                            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
-                                        </div>
-
-                                    </div>
-                                </form>
-
-                                <?php if ($user && $user['id'] == $u['user_id']): ?>
-                                    <div class="mt-2 d-flex justify-content-end">
-                                        <a href="index.php?controller=article&action=edit&id=<?= $u['id'] ?>" class="btn btn-warning btn-sm me-1">✏️ Modifier</a>
-                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-<?= $u['id'] ?>">
-                                            🗑️ Supprimer
-                                        </button>
-                                    </div>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-
 
                     <!-- Modal Commentaire -->
                     <div class="modal fade" id="modalComments-<?= $u['id'] ?>" tabindex="-1" aria-hidden="true">
@@ -172,8 +196,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 <?php endforeach; ?>
             <?php endif; ?>
 

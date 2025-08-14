@@ -48,4 +48,16 @@ class Emoji
         $stmt->bindValue(':article_id', $articleId);
         $stmt->execute();
     }
+
+    //
+    public function UnEmojiParUser($articleId, $userId)
+    {
+        $sql = "SELECT code FROM emojis WHERE article_id = :article_id AND user_id = :user_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':article_id' => $articleId,
+            ':user_id' => $userId
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
